@@ -1,0 +1,9 @@
+<%= text_f f, :name if controller_name != "hosts" %>
+<%#= textarea_f f, :description, :rows => 3 %>
+<%# checkbox_f f, :persistent %>
+<%= select_f f, :template, compute_resource.hardware_profiles, :id, :name %>
+<%= selectable_f f, :cores, 1..compute_resource.max_cpu_count, {}, :class => "mini" %>
+<%= selectable_f f, :memory, memory_options(compute_resource.max_memory) %>
+<%#= text_f f, :network_bridge_name %>
+<%#= text_f f, :volume_allocation %>
+<%#= text_f f, :network_interface_type %>

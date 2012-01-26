@@ -2,6 +2,12 @@
   <%= render('common/hypervisor', :item => @host) if @host.new_record? and !Hypervisor.first.nil? and authorized_for("Hypervisors::Guests", :create) %>
 </div>
 
+<div id="compute_resource">
+  <%= fields_for "#{type}[compute_attributes]" do |compute| %>
+    <%= render "compute_resources/vms/form/#{@host.compute_resource.provider.downcase}", :f => compute, :compute_resource => @host.compute_resource if @host.compute_resource %>
+  <% end -%>
+</div>
+
 <div id="network">
   <span id="mac_address">
     <%= render 'mac', :item => @host unless @hypervisor -%>
