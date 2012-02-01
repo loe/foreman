@@ -28,7 +28,7 @@ module Orchestration::Compute
     end
 
     def queue_compute_destroy
-      return unless errors.empty? and compte?
+      return unless errors.empty? and compute_resource_id.present? and uuid
       queue.create(:name => "Removing compute instance #{self}", :priority => 1,
                    :action => [self, :delCompute])
     end

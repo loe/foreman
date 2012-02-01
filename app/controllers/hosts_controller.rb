@@ -6,12 +6,14 @@ class HostsController < ApplicationController
 
   # actions which don't require authentication and are always treated as the admin user
   ANONYMOUS_ACTIONS=[ :query, :externalNodes, :lookup ]
+  AJAX_REQUESTS=%w{compute_resource_selected hostgroup_or_environment_selected}
   skip_before_filter :require_login, :only => ANONYMOUS_ACTIONS
   skip_before_filter :require_ssl, :only => ANONYMOUS_ACTIONS
   skip_before_filter :authorize, :only => ANONYMOUS_ACTIONS
   skip_before_filter :session_expiry, :update_activity_time, :only => ANONYMOUS_ACTIONS
   before_filter :set_admin_user, :only => ANONYMOUS_ACTIONS
 
+  before_filter :ajax_request, :only => AJAX_REQUESTS
   before_filter :find_hosts, :only => :query
   before_filter :find_multiple, :only => [:update_multiple_parameters, :multiple_build,
     :select_multiple_hostgroup, :select_multiple_environment, :multiple_parameters, :multiple_destroy,
@@ -119,9 +121,12 @@ class HostsController < ApplicationController
   end
 
   # form AJAX methods
-  def hostgroup_or_environment_selected
-    return head(:method_not_allowed) unless request.xhr?
+  def compute_resource_selected
+    compute = ComputeResource.find(params[:compute_resource_id]) if params[:compute_resource_id].to_i > 0
+    render :partial => "compute", :locals => {:compute_resource => compute} if compute
+  end
 
+  def hostgroup_or_environment_selected
     @environment = Environment.find(params[:environment_id]) unless params[:environment_id].empty?
     @hostgroup   = Hostgroup.find(params[:hostgroup_id])     unless params[:hostgroup_id].empty?
     @host        = Host.find(params[:host_id])               if params[:host_id].to_i > 0

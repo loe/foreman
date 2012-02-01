@@ -15,7 +15,7 @@ class ComputeResource < ActiveRecord::Base
 
   # allows to create a specific compute class based on the provider.
   def self.new_provider args
-    provider = args[:provider]
+    raise "must provider a provider" unless provider = args[:provider]
     PROVIDERS.each do |p|
       return eval("#{STI_PREFIX}::#{p}").new(args) if p.downcase == provider.downcase
     end
@@ -75,6 +75,12 @@ class ComputeResource < ActiveRecord::Base
     {
       :name => "foreman_#{Time.now.to_i}",
     }
+  end
+
+  def hardware_profiles
+  end
+
+  def hardware_profile(id)
   end
 
   protected
