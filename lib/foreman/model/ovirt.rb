@@ -57,7 +57,7 @@ module Foreman::Model
     private
 
     def fetch_uuid
-      filter = name.blank? ? "" : ("name=%s" % name)
+      filter = uuid.blank? ? "" : ("name=%s" % name)
       client = ::Fog::Compute.new(
         :provider => "ovirt",
         :ovirt_username => user,

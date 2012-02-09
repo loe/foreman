@@ -36,3 +36,20 @@ function ovirt_clusterSelected(item){
       }
     })
 }
+
+$(function(){providerSelected();})
+
+function providerSelected(item){
+  var provider = $(item).val();
+  if(provider == 'Ovirt')
+  {
+    $('#compute_resource_uuid').next('.help-inline').text("Enter Data-Center name here");
+     $('#compute_resource_uuid').parent().parent().show();
+  }
+  else
+  {
+    $('#compute_resource_uuid').next('.help-inline').text("");
+     $('#compute_resource_uuid').parent().parent().hide();
+  }
+
+}

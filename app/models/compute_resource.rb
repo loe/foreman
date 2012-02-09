@@ -73,7 +73,7 @@ class ComputeResource < ActiveRecord::Base
 
   def vm_instance_defaults
     {
-      :name => "foreman_#{Time.now.to_i}",
+      'name' => "foreman_#{Time.now.to_i}",
     }
   end
 
