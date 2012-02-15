@@ -2,7 +2,7 @@ module Orchestration::Compute
   def self.included(base)
     base.send :include, InstanceMethods
     base.class_eval do
-      attr_accessor :compute_attributes
+      attr_writer :compute_attributes
       after_validation :queue_compute
       before_destroy   :queue_compute_destroy
     end
@@ -11,6 +11,10 @@ module Orchestration::Compute
   module InstanceMethods
     def compute?
       compute_resource_id.present? and compute_attributes.present?
+    end
+
+    def compute_attributes
+      compute_resource.new_vm(@compute_attributes) if compute_resource_id.present? && @compute_attributes.present?
     end
 
     protected

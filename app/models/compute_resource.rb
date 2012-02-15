@@ -27,8 +27,8 @@ class ComputeResource < ActiveRecord::Base
   end
 
   # retuns a new fog server instance
-  def new_vm
-    client.servers.new vm_instance_defaults
+  def new_vm attr={}
+    client.servers.new vm_instance_defaults.merge(attr)
   end
 
   # return a list of virtual machines

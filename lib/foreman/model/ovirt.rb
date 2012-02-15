@@ -16,7 +16,7 @@ module Foreman::Model
     end
 
     def hardware_profiles
-      client.templates.all(:search => 'name=hwp_*')
+      client.templates
     end
 
     def hardware_profile(id)
@@ -42,6 +42,15 @@ module Foreman::Model
       super args
     end
 
+    def destroy_vm uuid
+      begin
+        find_vm_by_uuid(uuid).destroy
+      rescue OVIRT::OvirtException => e
+        raise e unless e.message =~ /404/
+      end
+      true
+    end
+
     protected
 
     def client
@@ -57,7 +66,7 @@ module Foreman::Model
     private
 
     def fetch_uuid
-      filter = uuid.blank? ? "" : ("name=%s" % name)
+      filter = name.blank? ? "" : ("name=%s" % name)
       client = ::Fog::Compute.new(
         :provider => "ovirt",
         :ovirt_username => user,
@@ -69,7 +78,7 @@ module Foreman::Model
           errors.add(:base, "Datacenter #{name} not found")
           false
         else
-          self.uuid = datacenters.first.id
+          self.uuid = datacenters.first[:id]
         end
     rescue => e
       errors.add(:base, e.message)
